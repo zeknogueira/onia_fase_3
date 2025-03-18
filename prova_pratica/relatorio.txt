@@ -1,0 +1,149 @@
+Relatório 3ª fase ONIA Ezequiel Melo Nogueira
+
+Versão do Python utilizada: 3.12.10
+
+Bibliotecas utilizadas: 
+	Scikit-Learn: 1.6.1
+	Pandas: 2.2.3
+	Matplotlib: 3.10.1
+	Numpy: 2.2.3
+	XGBoost: 3.0.0
+	Imb-Learn: 0.13.0
+Editor Utilizado: 
+	Jupyter Notebook: 7.3.2
+
+Passos da resolução da prova:
+	1. Carregamento do arquivo treino.csv utilizando pandas
+	
+	2. Análise dos dados para encontrar possíveis linhas em branco 
+	ou valores não convertidos utilizando pandas (não foi encontrado)
+	
+	3. Diferenciação das colunas de target, id e características no  
+	dataset de treinamento utilizando pandas
+
+	4. Separação em conjunto de treinamento e conjunto de teste para 
+	metrificação dos modelos que seriam testados utilizando 
+	o módulo de train_test_split da biblioteca imblearn
+		4.1: 20% separado para conjunto de teste
+	
+	5. Primeiro treinamento para descobrir algoritmos com potencial
+	para o conjunto
+		5.1: Algoritmos para multiclasse testados:
+			Random Forest, KNN, SVM, Regressão Logística, Naive Bayes,
+			Árvore de Decisão, Rede Neural e XG Boost 
+			(Com exceção do último, em que foi necessário uma biblioteca própria,
+			todos foram implementados dentro da biblioteca sklearn);
+		5.2: Visualização da matriz de confusão nos algoritmos que melhor performaram
+		utilizando os módulos confusion_matrix e ConfusionMatrixDisplay do sklearn
+		biblioteca matplotlib.pyplot para gerar gráficos com melhores informações visuais;
+	6. A partir das informações das matrizes de confusão e analisando os dados do conjunto de treinamento, teste de diferentes técnicas de balanceamento de dados
+		6.1: Técnicas de UnderSampling e OverSampling aplicadas, sempre retreinando os modelos com os dados balanceados por cada técnica e suas combinações, utilizando os módulos SMOTE, SMOTETomek, ADASYN, RandomUnderSampler e Pipeline do imblearn;
+	7. Implementação de validação cruzada para melhorar a confiabilidade nas métricas de teste dos modelos, focando na métrica F1-Score, com os módulos StratifiedKFold, classification_report e f1_score do sklearn;
+	8. Aprimoramento de Hiperparâmetros nos dois melhores algoritmos dos testes anteriores, com GridSearchCV (não suportado pelo hardware) e RandomSearchCV
+	9. Análise dos resultados focando na métrica F1-Score para escolha do algoritmo final para predição do arquivo de teste.
+	10. Carregamento do arquivo de teste e separação das colunas de ID e características utilizando pandas
+	11. Predição do arquivo de teste com o melhor modelo desenvolvido
+	12. Junção das predições com os IDs fechamento de arquivo csv de resposta
+	
+	
+
+	
+Decisões Tomadas durante a modelagem:
+
+	Entendimento do problema e escolha do ambiente, das bibliotecas e do editor utilizado:
+	
+		Depois de compreender o problema a ser resolvido, pesquisei as melhores técnicas de resolução e os ambientes para desenvolvimento mais adequados. Minha escolha pelo ScikitLearn se deu pela agilidade e robustez que o conjunto de ferramentas fornecia. A escolha das demais bibliotecas utilizadas ao longo da modelagem seguiu o mesmo parâmetro.
+		Elenquei, através de pesquisas, os principais algoritmos de classificação multiclasse para realizar testes, considerando também o hardware que tinha disponível e o tempo para realização da tarefa:
+			Algoritmos:Random Forest, KNN, SVM, Regressão Logística, Naive Bayes,	Árvore de Decisão, Rede Neural e XGBoost
+		
+		
+		Escolhi o editor Jupyter Notebook pela agilidade na instalação e utilização e pela característica de execução em células, que possibilitou maior dinamismo durante o processo.
+		Em determinado momento, o hardware da minha máquina não foi capaz de processar o algoritmo para aperfeiçoamento de hiperparâmetros GridSearchCV. Procurando solucionar o problema, testei uma migração para o Google Colab, utilizando o plano free. Como continuei enfrentando o mesmo problema, optei por manter o jupyter notebook pela facilidade de integração com os arquivos na minha máquina e com o git, que usei durante a modelagem para versionar os arquivos.
+	
+	Divisão do arquivo de treino em Treinamento e Teste:
+		
+		Para conseguir metrificar os resultados dos modelos que testei, precisei dividir o arquivo treino.csv. em conjunto de treino e conjunto de teste. Considerando o tamanho do dataset, determinei 20% para teste e 80% para treinamento. 
+		Esse procedimento possibilitou que, posteriormente, fosse possível, ao treinar os modelos e fazer predições no conjunto de teste criado, realizar metrificações importantes para tomadas de decisão de modelagem, como a métrica F e as matrizes de confusão.
+	
+	Teste de diversos algoritmos de uma só vez:
+	
+		No início da modelagem, escolhi testar algoritmos diferentes de uma só vez para entender quais teriam potencial para um aperfeiçoamento posterior. Fiz isso declarando arrays com os modelos e treinando-os em loops "for". Essa técnica me ajudou a economizar tempo, aumentando a eficiência da modelagem. 
+		
+	Análise dos algoritmos e visualização das matrizes de confusão:
+	
+		Analisando as métricas dos modelos testados, escolhi continuar com a modelagem de 3 modelos que demonstraram potencial significativo: RandomForestClassifier, XGBoost e Neural Network.
+		Implementei a visualização das matrizes de confusão para entender quais próximos passos tomar.
+	
+	
+		
+	Balanceamento dos dados e Validação Cruzada:
+	
+		Analisando as matrizes de confusão e os rótulos do conjunto de treinamento, percebi que os dados de treinamento estavam bastante desbalanceados. Para solucionar esse problema, treinei os modelos com dados balanceados, testando técnicas de OverSampling e UnderSampling e realizando combinações entre diferentes procedimentos.
+ 
+Contagem de valores por classe no conjunto de treinamento (y_test):
+
+Classes	Target
+0    		4073
+4    		1303
+1    		1259
+2    		1108
+3     		657
+
+		Supondo que o desbalanceamento dos dados tivesse influenciado na etapa de escolha anterior, treinei novamente todos os modelos com dados balanceados.. As diferenças de performance continuaram semelhantes. 
+		Embora o balanceamento dos dados não tenha gerado um aumento substancial nos resultados dos três melhores modelos escolhidos até então, a performance nas classes minoritárias melhorou significativamente. Isso me fez optar por continuar a modelagem com os dados balanceados.
+		O algoritmo de balanceamento que obteve a melhor performance foi a combinação dos algoritmos SMOTETomek e ADASYN, utilizando Pipeline para agilizar as tarefas de balanceamento.
+
+	Contagem de valores por classe no conjunto de treinamento após balanceamento com SMOTETomek + ADASYN (y_rebalanceado_smote_tomek_adasyn):
+
+Classes 	Target
+2    		4224
+3    		4224
+4    		4219
+1    		4216
+0    		4186
+
+
+		Como o modelo de Rede Neural não obteve nenhuma melhora nos dados balanceados e teve desempenho inferior à performance dos outros dois, optei por continuar com RandomForest e XGBoost.
+		Durante essa etapa, implementei técnicas de Validação Cruzada no treinamento e predição para teste. Isso foi essencial para que obtivesse maior confiabilidade nas métricas encontradas durante os testes e tomasse decisões com mais certeza.
+		
+
+		
+	Aprimoramento de Hiperparâmetros:
+		
+		Com foco em aprimorar os dois melhores modelos que obtivera até então, implementei técnicas de aprimoramento de hiperparâmetros. 
+		Minha primeira tentativa foi utilizando o GridSearchCV, testando os principais hiperparâmetros do RandomForest e do XGBoost. Infelizmente o hardware da minha máquina não foi capaz de rodar o algoritmo em um tempo suficiente para que fosse possível a utilização. Com a máquina host do plano free do Google Colab também não foi suficiente. 
+		Visando o tempo de entrega da tarefa e o poder de processamento do meu hardware, parti para o RandomSearchCV. Com os parâmetros testados nesse algoritmo com 10 iterações, obtive uma melhora em ambos os algoritmos, dando uma ligeira vantagem para o XGBoost.
+		Testei também os resultados de parâmetros calculados em números de iterações maiores, mas não obtive melhores performances dos modelos. 
+		
+	Escolha do Modelo Final
+	
+		Para realizar as predições no arquivo de teste e enviar a tarefa escolhi o modelo com algoritmo XGBoost. Entre os modelos testados, ele se destacou principalmente considerando a métrica F1-Score. Em meus testes, com as predições do conjunto de teste em cima do arquivo de treino, obtive o número de 0.765687 neste modelo. 
+		Considerando o tempo para entrega da tarefa, o hardware disponível, o tamanho do dataset de treinamento e o desbalanceamento severo nas classes, tomei esse como um resultado competitivo. 
+
+Anexo o arquivo resposta com o seguinte título:
+"ezequiel_melo_nogueira_3_fase_onia_resposta_teste.csv"
+
+
+scripts:
+	Durante toda a realização da modelagem, utilizei o git para versionamento dos scripts, tendo um repositório hospedado no github. 
+	Link do repositório: https://github.com/zeknogueira/onia_fase_3
+	*mantive o repositório privado durante toda a prova, tornando-o público somente após o prazo de entrega da 3ª fase para que, caso quisessem, pudessem visualizar as etapas que segui. 
+	**Caso a 3ª fase seja prorrogada, manterei o repositório privado até o novo prazo estipulado.
+	
+
+Referências:
+
+https://medium.com/data-hackers/principais-m%C3%A9tricas-de-classifica%C3%A7%C3%A3o-de-modelos-em-machine-learning-94eeb4b40ea9
+
+https://scikit-learn.org/stable/supervised_learning.html
+
+https://scikit-learn.org/stable/model_selection.html
+
+https://mariofilho.com/precisao-recall-e-f1-score-em-machine-learning/
+
+https://tatianaesc.medium.com/implementando-um-modelo-de-classifica%C3%A7%C3%A3o-no-scikit-learn-6206d684b377
+
+https://matplotlib.org/stable/
+
+
+
