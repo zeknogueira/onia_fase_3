@@ -8,7 +8,7 @@ Contém também um diretório com os datasets brutos fornecidos pela ONIA (trein
 
 Ainda dentro do diretório prova_pratica, encontra-se o arquivo relatorio.txt, cópia do relatório que enviei juntamente com o arquivo resposta.
 
-Nele estão listadas todas as bibliotecas utilizadas e softwares utilizados, com suas respectivas versões.
+Nele estão listadas todas as bibliotecas e softwares utilizados, com suas respectivas versões.
 
 O arquivo requirements.txt também lista todas as bibliotecas, incluindo algumas não listadas no relatório que, provavelmente, foram sendo incluídas automaticamente no decorrer das instalações.
 
